@@ -77,7 +77,7 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
         core.info(content);
         const split = content.expo.version.split(".");
         const newVersion = `${split[0]}.${split[1]}.${parseInt(split[2]) + 1}`;
-        core.info(`  - ${file}: Update version from "${content.version}" to "${parseInt(split[2]) + 1}"`);
+        core.info(`  - ${file}: Update version from "${content.expo.version}" to "${newVersion}"`);
         fs_1.default.writeFileSync(dir, parser.write(content));
         return true;
     }, false);

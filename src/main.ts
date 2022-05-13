@@ -49,7 +49,7 @@ const run = async () => {
     const newVersion = `${split[0]}.${split[1]}.${parseInt(split[2]) + 1}`;
 
     core.info(
-      `  - ${file}: Update version from "${content.version}" to "${parseInt(split[2]) + 1}"`
+      `  - ${file}: Update version from "${content.expo.version}" to "${newVersion}"`
     );
     fs.writeFileSync(dir, parser.write(content));
     return true;
