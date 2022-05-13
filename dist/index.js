@@ -73,7 +73,9 @@ const run = () => __awaiter(void 0, void 0, void 0, function* () {
         const buffer = fs_1.default.readFileSync(dir, "utf-8");
         const parser = getParser(file, { spacing: 4 });
         const content = parser.read(buffer);
-        const split = content.version.split(".");
+        core.info(dir);
+        core.info(content);
+        const split = content.expo.version.split(".");
         const newVersion = `${split[0]}.${split[1]}.${parseInt(split[2]) + 1}`;
         core.info(`  - ${file}: Update version from "${content.version}" to "${parseInt(split[2]) + 1}"`);
         fs_1.default.writeFileSync(dir, parser.write(content));
