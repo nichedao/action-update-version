@@ -42,6 +42,9 @@ const run = async () => {
     
     const content = parser.read(buffer);
 
+    core.info(dir);
+    core.info(content);
+
     const split = content.expo.version.split(".");
     const newVersion = `${split[0]}.${split[1]}.${parseInt(split[2]) + 1}`;
 
