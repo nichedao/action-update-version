@@ -39,9 +39,10 @@ const run = async () => {
     const dir = path.join(root, file);
     const buffer = fs.readFileSync(dir, "utf-8");
     const parser = getParser(file, { spacing: 4 });
+    
     const content = parser.read(buffer);
 
-    const split = content.version.split(".");
+    const split = content.expo.version.split(".");
     const newVersion = `${split[0]}.${split[1]}.${parseInt(split[2]) + 1}`;
 
     core.info(
