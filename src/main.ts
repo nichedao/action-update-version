@@ -51,6 +51,8 @@ const run = async () => {
     core.info(
       `  - ${file}: Update version from "${content.expo.version}" to "${newVersion}"`
     );
+
+    content.expo.version = newVersion;
     fs.writeFileSync(dir, parser.write(content));
     return true;
   }, false);
