@@ -1,8 +1,6 @@
 import path from "path";
 import fs from "fs";
 import * as core from "@actions/core";
-import * as exec from "@actions/exec";
-import * as github from "@actions/github";
 import YAML from "yaml";
 
 const getParser = (file: string, options: { spacing: number }) => {
@@ -30,7 +28,6 @@ const getParser = (file: string, options: { spacing: number }) => {
 const run = async () => {
   core.info("Setting input and environment variables");
   const root = process.env.GITHUB_WORKSPACE as string;
-  const regex = new RegExp(core.getInput("version-regexp"));
   const files = core.getInput("files").replace(" ", "").split(",");
 
   // Forgive me for the unnecessary fanciness 🙏
@@ -38,28 +35,27 @@ const run = async () => {
   const changed = files.reduce((change, file) => {
     const dir = path.join(root, file);
     const buffer = fs.readFileSync(dir, "utf-8");
-    const parser = getParser(file, { spacing: 4 });
+    const parser = getParser(file, { spacing: 2 });
     
     const content = parser.read(buffer);
 
     core.info(dir);
     core.info(content);
 
-    const split = content.expo.version.split(".");
-    const newVersion = `${split[0]}.${split[1]}.${parseInt(split[2]) + 1}`;
+    const newVersion = `${parseInt(content.expo.ios.buildNumber, 10) + 1}`;
 
     core.info(
-      `  - ${file}: Update version from "${content.expo.version}" to "${newVersion}"`
+      `  - ${file}: Update version from "${content.expo.ios.buildNumber}" to "${newVersion}"`
     );
 
-    content.expo.version = newVersion;
+    content.expo.ios.buildNumber = newVersion;
     fs.writeFileSync(dir, parser.write(content));
     return true;
   }, false);
 
   if (!changed) {
     core.info("Skipped commit since no files were changed");
-    return;
+    
   }
 };
 

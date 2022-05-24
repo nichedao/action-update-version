@@ -64,27 +64,24 @@ const getParser = (file, options) => {
 const run = () => __awaiter(void 0, void 0, void 0, function* () {
     core.info("Setting input and environment variables");
     const root = process.env.GITHUB_WORKSPACE;
-    const regex = new RegExp(core.getInput("version-regexp"));
     const files = core.getInput("files").replace(" ", "").split(",");
     // Forgive me for the unnecessary fanciness 🙏
     core.info("Updating files version field");
     const changed = files.reduce((change, file) => {
         const dir = path_1.default.join(root, file);
         const buffer = fs_1.default.readFileSync(dir, "utf-8");
-        const parser = getParser(file, { spacing: 4 });
+        const parser = getParser(file, { spacing: 2 });
         const content = parser.read(buffer);
         core.info(dir);
         core.info(content);
-        const split = content.expo.version.split(".");
-        const newVersion = `${split[0]}.${split[1]}.${parseInt(split[2]) + 1}`;
-        core.info(`  - ${file}: Update version from "${content.expo.version}" to "${newVersion}"`);
-        content.expo.version = newVersion;
+        const newVersion = `${parseInt(content.expo.ios.buildNumber, 10) + 1}`;
+        core.info(`  - ${file}: Update version from "${content.expo.ios.buildNumber}" to "${newVersion}"`);
+        content.expo.ios.buildNumber = newVersion;
         fs_1.default.writeFileSync(dir, parser.write(content));
         return true;
     }, false);
     if (!changed) {
         core.info("Skipped commit since no files were changed");
-        return;
     }
 });
 run()
